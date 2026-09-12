@@ -1,0 +1,887 @@
+<title>Dhruv &amp; Mitra's Gold Mine</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito+Sans:ital,wght@0,400;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#EAEEF3; --surface:#FFFFFF; --surface-2:#F4F7FA; --surface-3:#E4EAF1;
+    --border:#D6DFE9; --border-strong:#BFCCDA;
+    --ink:#13202D; --ink-2:#46576A; --ink-3:#73859B;
+    --gain:#35A971; --loss:#E67019;
+    --gold:#A9761A; --gold-ink:#6E4B0C; --gold-wash:#F6EAD1;
+    --dhruv:#2E6FD9; --mitra:#B8851A;
+    --warn-wash:#FBEFD6; --warn-line:#E0BE72; --warn-ink:#6B4E12;
+    --shadow:0 1px 2px rgba(19,32,45,.05), 0 10px 28px -16px rgba(19,32,45,.30);
+    --radius:14px;
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E151D; --surface:#17202B; --surface-2:#1C2732; --surface-3:#24313E;
+      --border:#2A3845; --border-strong:#3B4B5C;
+      --ink:#E9F0F7; --ink-2:#A7B7C7; --ink-3:#7B8C9E;
+      --gain:#31AD74; --loss:#C45E1F;
+      --gold:#D9A441; --gold-ink:#EDC77E; --gold-wash:#2A2317;
+      --dhruv:#4F93EC; --mitra:#B4831F;
+      --warn-wash:#2C2415; --warn-line:#6B5626; --warn-ink:#E7CE95;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.8);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E151D; --surface:#17202B; --surface-2:#1C2732; --surface-3:#24313E;
+    --border:#2A3845; --border-strong:#3B4B5C;
+    --ink:#E9F0F7; --ink-2:#A7B7C7; --ink-3:#7B8C9E;
+    --gain:#31AD74; --loss:#C45E1F;
+    --gold:#D9A441; --gold-ink:#EDC77E; --gold-wash:#2A2317;
+    --dhruv:#4F93EC; --mitra:#B4831F;
+    --warn-wash:#2C2415; --warn-line:#6B5626; --warn-ink:#E7CE95;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 12px 30px -18px rgba(0,0,0,.8);
+    color-scheme:dark;
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"Nunito Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size:16px; line-height:1.55; margin:0;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{max-width:1060px; margin:0 auto; padding-inline:18px; padding-block:28px 56px;
+        display:flex; flex-direction:column; gap:20px}
+  h1,h2,h3{font-family:Fredoka, "Nunito Sans", system-ui, sans-serif; margin:0; text-wrap:balance; font-weight:600}
+  .mono{font-family:"IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace; font-variant-numeric:tabular-nums}
+  .tnum{font-variant-numeric:tabular-nums}
+
+  /* ---------- masthead ---------- */
+  .masthead{display:flex; flex-wrap:wrap; align-items:flex-end; gap:12px 20px; justify-content:space-between;
+            border-bottom:2px solid var(--gold); padding-bottom:14px}
+  .masthead h1{font-size:clamp(28px,5vw,40px); letter-spacing:-.015em; line-height:1.1}
+  .masthead .sub{color:var(--ink-2); font-size:15px; margin-top:3px; max-width:54ch}
+  .stamp{display:flex; flex-direction:column; gap:4px; align-items:flex-start}
+  .stamp .k{font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .stamp .v{font-family:Fredoka,sans-serif; font-size:17px; color:var(--gold)}
+
+  /* ---------- generic panel ---------- */
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:20px}
+  .panel > h2{font-size:21px; letter-spacing:-.01em}
+  .panel .lede{color:var(--ink-2); font-size:14.5px; margin:4px 0 0}
+
+  /* ---------- pretend banner ---------- */
+  .pretend-banner{display:flex; flex-wrap:wrap; gap:12px 16px; align-items:center; justify-content:space-between;
+     background:var(--warn-wash); border:1px solid var(--warn-line); border-radius:var(--radius); padding:13px 16px; color:var(--warn-ink)}
+  .pretend-banner p{margin:0; font-size:14.5px; max-width:62ch}
+  .pretend-banner strong{font-family:Fredoka,sans-serif; letter-spacing:.02em}
+
+  /* ---------- hero scoreboard ---------- */
+  .hero{background:var(--surface); border:1px solid var(--border); border-top:4px solid var(--gold);
+        border-radius:var(--radius); box-shadow:var(--shadow); padding:24px;
+        display:grid; grid-template-columns:minmax(0,1.05fr) minmax(0,1fr); gap:24px 32px; align-items:center}
+  .mood{display:flex; gap:18px; align-items:center}
+  .mood-face{font-size:62px; line-height:1; flex:none}
+  .mood-text .big{font-family:Fredoka,sans-serif; font-size:clamp(22px,3.6vw,30px); line-height:1.15; letter-spacing:-.01em}
+  .mood-text .small{color:var(--ink-2); font-size:14.5px; margin-top:6px}
+  .scores{display:grid; grid-template-columns:1fr 1fr; gap:18px}
+  .score .k{font-size:11px; letter-spacing:.11em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .score .v{font-family:Fredoka,sans-serif; font-size:clamp(24px,4vw,33px); line-height:1.15; margin-top:2px; letter-spacing:-.01em}
+  .score .n{color:var(--ink-3); font-size:12.5px; margin-top:2px}
+
+  .pill{display:inline-flex; align-items:center; gap:7px; border-radius:999px; padding:5px 13px 5px 10px;
+        font-family:Fredoka,sans-serif; font-size:15px; color:#fff; white-space:nowrap}
+  .pill.up{background:var(--gain)} .pill.down{background:var(--loss)} .pill.flat{background:var(--ink-3)}
+  .pill .glyph{font-size:13px}
+
+  /* ---------- kid cards ---------- */
+  .kids{display:grid; grid-template-columns:1fr 1fr; gap:16px}
+  .kid{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:18px;
+       display:flex; flex-direction:column; gap:11px}
+  .kid-name{display:flex; align-items:center; gap:9px; font-family:Fredoka,sans-serif; font-size:19px}
+  .dot{width:13px; height:13px; border-radius:50%; flex:none}
+  .dot.dhruv{background:var(--dhruv)} .dot.mitra{background:var(--mitra)}
+  .kid-value{font-family:Fredoka,sans-serif; font-size:clamp(26px,4.4vw,34px); line-height:1; letter-spacing:-.015em}
+  .kid-meta{color:var(--ink-2); font-size:13.5px}
+  .sharebar{height:9px; border-radius:5px; background:var(--surface-3); overflow:hidden; display:flex}
+  .sharebar i{display:block; height:100%}
+  .sharebar i.dhruv{background:var(--dhruv)} .sharebar i.mitra{background:var(--mitra)}
+
+  /* ---------- charts ---------- */
+  .chart-head{display:flex; flex-wrap:wrap; gap:10px 18px; align-items:flex-start; justify-content:space-between; margin-bottom:6px}
+  .seg{display:inline-flex; background:var(--surface-2); border:1px solid var(--border); border-radius:9px; padding:3px; gap:3px; flex:none}
+  .seg button{font:inherit; font-size:13.5px; font-weight:600; border:0; background:transparent; color:var(--ink-2);
+              padding:6px 12px; border-radius:6px; cursor:pointer; white-space:nowrap}
+  .seg button[aria-pressed="true"]{background:var(--surface); color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.10)}
+  .seg button:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
+  .chart-wrap{position:relative; margin-top:12px}
+  svg.chart{display:block; width:100%; height:auto; overflow:visible}
+  .grid-line{stroke:var(--border); stroke-width:1}
+  .axis-text{fill:var(--ink-3); font-family:"IBM Plex Mono",monospace; font-size:11.5px}
+  .axis-text.day{font-size:12px}
+  .base-line{stroke:var(--ink-3); stroke-width:2; stroke-dasharray:5 4; fill:none}
+  .base-label{fill:var(--ink-2); font-family:"Nunito Sans",sans-serif; font-size:12.5px; font-weight:700}
+  .area-up{fill:var(--gain); opacity:.20}
+  .area-down{fill:var(--loss); opacity:.20}
+  .value-line{fill:none; stroke:var(--gold); stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round}
+  .dot-mark{fill:var(--gold); stroke:var(--surface); stroke-width:2}
+  .dot-end{fill:var(--gold); stroke:var(--surface); stroke-width:2.5}
+  .end-label{fill:var(--ink); font-family:Fredoka,sans-serif; font-size:15px}
+  .bar-up{fill:var(--gain)} .bar-down{fill:var(--loss)}
+  .bar-label{fill:var(--ink); font-family:"IBM Plex Mono",monospace; font-size:12px; font-weight:600}
+  .zero-line{stroke:var(--border-strong); stroke-width:1.5}
+  .watermark{fill:var(--ink-3); font-family:Fredoka,sans-serif; font-size:34px; opacity:.13; letter-spacing:.16em}
+  .hit{fill:transparent; cursor:crosshair}
+  .legend{display:flex; flex-wrap:wrap; gap:8px 18px; margin-top:12px; font-size:13.5px; color:var(--ink-2)}
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .swatch{width:14px; height:14px; border-radius:4px; flex:none}
+  .swatch.gain{background:var(--gain)} .swatch.loss{background:var(--loss)}
+  .swatch.line{width:18px; height:3px; border-radius:2px; background:var(--gold)}
+  .swatch.dash{width:18px; height:0; border-top:2px dashed var(--ink-3)}
+  .tip{position:absolute; pointer-events:none; opacity:0; transform:translate(-50%,-112%); transition:opacity .09s;
+       background:var(--ink); color:var(--bg); border-radius:9px; padding:8px 11px; font-size:13px; line-height:1.4;
+       white-space:nowrap; z-index:5; box-shadow:0 6px 18px -6px rgba(0,0,0,.45)}
+  .tip .t-d{font-weight:700; font-family:Fredoka,sans-serif; font-size:13.5px}
+  .tip .t-v{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+  .tip[data-show="1"]{opacity:1}
+
+  /* ---------- bottom columns ---------- */
+  .cols{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:16px; align-items:start}
+  form.add{display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; align-items:flex-end}
+  .field{display:flex; flex-direction:column; gap:5px; flex:1 1 130px; min-width:0}
+  .field label{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3); font-weight:700}
+  .field input{font:inherit; font-family:"IBM Plex Mono",monospace; font-size:15px; padding:9px 11px; width:100%;
+               border:1px solid var(--border-strong); border-radius:9px; background:var(--surface-2); color:var(--ink)}
+  .field input:focus-visible{outline:2px solid var(--gold); outline-offset:1px; border-color:var(--gold)}
+  button.go{font-family:Fredoka,sans-serif; font-size:15.5px; border:0; border-radius:9px; padding:10px 20px;
+            background:var(--gold); color:#fff; cursor:pointer; flex:none}
+  button.go:hover{filter:brightness(1.07)}
+  button.go:focus-visible{outline:2px solid var(--ink); outline-offset:2px}
+  button.ghost{font:inherit; font-weight:700; font-size:13.5px; border:1px solid var(--border-strong); background:var(--surface);
+               color:var(--ink-2); border-radius:8px; padding:7px 13px; cursor:pointer; flex:none}
+  button.ghost:hover{border-color:var(--ink-3); color:var(--ink)}
+  button.ghost:focus-visible{outline:2px solid var(--gold); outline-offset:1px}
+  .status{font-size:13.5px; color:var(--ink-2); margin-top:10px; min-height:1.2em}
+  .status[data-kind="bad"]{color:var(--loss); font-weight:600}
+
+  .explain{background:var(--surface-2); border:1px solid var(--border); border-radius:var(--radius); padding:20px}
+  .explain h2{font-size:20px}
+  .explain dl{margin:14px 0 0; display:flex; flex-direction:column; gap:14px}
+  .explain dt{font-family:Fredoka,sans-serif; font-size:16px; color:var(--ink)}
+  .explain dd{margin:3px 0 0; color:var(--ink-2); font-size:14.5px; max-width:62ch}
+
+  /* ---------- table ---------- */
+  .table-scroll{overflow-x:auto; margin-top:14px}
+  table{border-collapse:collapse; width:100%; font-size:14px; min-width:560px}
+  th,td{text-align:right; padding:9px 10px; border-bottom:1px solid var(--border); white-space:nowrap}
+  th:first-child, td:first-child{text-align:left}
+  th{font-size:11px; letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3); font-weight:700;
+     border-bottom:1.5px solid var(--border-strong)}
+  td.num{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+  tr.is-buy td{background:var(--gold-wash)}
+  .tag{display:inline-block; font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; font-weight:700;
+       border-radius:5px; padding:2px 7px; border:1px solid var(--warn-line); color:var(--warn-ink); background:var(--warn-wash)}
+  .updown{font-family:Fredoka,sans-serif; font-size:13.5px}
+  .updown.up{color:var(--gain)} .updown.down{color:var(--loss)}
+  button.del{font:inherit; font-size:16px; line-height:1; border:0; background:transparent; color:var(--ink-3);
+             cursor:pointer; padding:3px 7px; border-radius:6px}
+  button.del:hover{color:var(--loss); background:var(--surface-2)}
+  button.del:focus-visible{outline:2px solid var(--gold)}
+
+  footer.foot{color:var(--ink-3); font-size:13px; border-top:1px solid var(--border); padding-top:16px; max-width:70ch}
+
+  @media (max-width:880px){
+    .hero{grid-template-columns:1fr; gap:20px}
+    .cols{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .kids{grid-template-columns:1fr}
+    .scores{grid-template-columns:1fr 1fr; gap:14px}
+    .mood-face{font-size:50px}
+    .page{padding-block:22px 40px}
+  }
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+
+<div class="page">
+
+  <header class="masthead">
+    <div>
+      <h1>Dhruv &amp; Mitra's Gold Mine</h1>
+      <p class="sub">You two own <strong class="mono">2.10380344</strong> shares of <strong>GDX</strong> &mdash; a basket of about fifty companies that dig gold out of the ground. Here is how your money is doing.</p>
+    </div>
+    <div class="stamp">
+      <span class="k">Trade locked</span>
+      <span class="v">Sept 7, 2026</span>
+    </div>
+  </header>
+
+  <div class="pretend-banner" id="pretendBanner" hidden>
+    <p><strong>These are pretend prices.</strong> Nobody has typed in a real GDX price yet, so the chart is showing made-up numbers to demonstrate how the graph works. Add a real closing price below and the pretend days disappear.</p>
+    <button class="ghost" type="button" id="dismissPretend">Hide pretend days</button>
+  </div>
+
+  <section class="hero" aria-labelledby="heroTitle">
+    <h2 id="heroTitle" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap">Today's scoreboard</h2>
+    <div class="mood">
+      <div class="mood-face" id="moodFace" aria-hidden="true">🙂</div>
+      <div class="mood-text">
+        <div class="big" id="moodLine">Loading&hellip;</div>
+        <div class="small" id="moodSub"></div>
+      </div>
+    </div>
+    <div class="scores">
+      <div class="score">
+        <div class="k">Worth right now</div>
+        <div class="v mono" id="scoreValue">&mdash;</div>
+        <div class="n" id="scoreValueNote"></div>
+      </div>
+      <div class="score">
+        <div class="k">Gain or loss so far</div>
+        <div class="v" id="scoreGainPill"></div>
+        <div class="n" id="scoreGainNote"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="kids" aria-label="Each child's share">
+    <div class="kid">
+      <div class="kid-name"><span class="dot dhruv"></span>Dhruv</div>
+      <div class="kid-value mono" id="dhruvValue">&mdash;</div>
+      <div class="kid-meta" id="dhruvMeta"></div>
+      <div id="dhruvPill"></div>
+      <div class="sharebar" aria-hidden="true"><i class="dhruv" style="width:13.4%"></i><i class="mitra" style="width:86.6%"></i></div>
+      <div class="kid-meta">Dhruv owns <strong>13.4%</strong> of the pot ($38 of the $284 you both put in).</div>
+    </div>
+    <div class="kid">
+      <div class="kid-name"><span class="dot mitra"></span>Mitra</div>
+      <div class="kid-value mono" id="mitraValue">&mdash;</div>
+      <div class="kid-meta" id="mitraMeta"></div>
+      <div id="mitraPill"></div>
+      <div class="sharebar" aria-hidden="true"><i class="dhruv" style="width:13.4%"></i><i class="mitra" style="width:86.6%"></i></div>
+      <div class="kid-meta">Mitra owns <strong>86.6%</strong> of the pot ($246 of the $284 you both put in).</div>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="chart1Title">
+    <div class="chart-head">
+      <div>
+        <h2 id="chart1Title">What your money is worth</h2>
+        <p class="lede">The gold line is what your shares are worth. The dashed line is what you paid. Green fill means you are ahead; orange fill means you are behind.</p>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart" id="valueChart" viewBox="0 0 800 320" role="img" aria-labelledby="chart1Title chart1Desc"></svg>
+      <desc id="chart1Desc" hidden></desc>
+      <div class="tip" id="tip1"></div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch line"></i>What your shares are worth</span>
+      <span><i class="swatch dash"></i>What you paid ($208.82)</span>
+      <span><i class="swatch gain"></i>Ahead</span>
+      <span><i class="swatch loss"></i>Behind</span>
+    </div>
+  </section>
+
+  <section class="panel" aria-labelledby="chart2Title">
+    <div class="chart-head">
+      <div>
+        <h2 id="chart2Title">Up days and down days</h2>
+        <p class="lede" id="chart2Lede">Each bar is one day. Bars that point up are days you made money.</p>
+      </div>
+      <div class="seg" role="group" aria-label="What the bars show">
+        <button type="button" id="modeDaily" aria-pressed="true">Each day's change</button>
+        <button type="button" id="modeTotal" aria-pressed="false">Total since you bought</button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <svg class="chart" id="barsChart" viewBox="0 0 800 260" role="img" aria-labelledby="chart2Title chart2Desc"></svg>
+      <desc id="chart2Desc" hidden></desc>
+      <div class="tip" id="tip2"></div>
+    </div>
+    <div class="legend">
+      <span><i class="swatch gain"></i>&#9650; Up &mdash; you gained money</span>
+      <span><i class="swatch loss"></i>&#9660; Down &mdash; you lost money</span>
+      <span id="tallyLegend"></span>
+    </div>
+  </section>
+
+  <div class="cols">
+    <section class="panel" aria-labelledby="addTitle">
+      <h2 id="addTitle">Add today's price</h2>
+      <p class="lede">Look up the GDX closing price, type it in, and the graph updates for everyone.</p>
+      <form class="add" id="addForm">
+        <div class="field">
+          <label for="inDate">Day</label>
+          <input type="date" id="inDate" name="date" required>
+        </div>
+        <div class="field">
+          <label for="inPrice">GDX price ($)</label>
+          <input type="number" id="inPrice" name="price" step="0.01" min="0.01" max="10000" placeholder="99.26" required inputmode="decimal">
+        </div>
+        <button class="go" type="submit">Save price</button>
+      </form>
+      <p class="status" id="addStatus"></p>
+    </section>
+
+    <section class="explain" aria-labelledby="explainTitle">
+      <h2 id="explainTitle">What is actually going on</h2>
+      <dl>
+        <dt>What did you buy?</dt>
+        <dd>Shares of GDX. One share is a tiny slice of about fifty gold-mining companies at once &mdash; Newmont, Barrick, Agnico Eagle and others. You own just over two slices.</dd>
+        <dt>Why does the number move?</dt>
+        <dd>Other people buy and sell GDX all day long, and the price moves with them. It only moves Monday to Friday while the stock market is open. On weekends and holidays it sits perfectly still.</dd>
+        <dt>Did you really lose money on a red day?</dt>
+        <dd>Not yet. The loss is only on paper until you sell. If you hold on and the price comes back up, the red day never cost you anything.</dd>
+        <dt>Why is Mitra's number so much bigger?</dt>
+        <dd>Because Mitra put in more money &mdash; $246 against Dhruv's $38. Both of you gain and lose the same <em>percentage</em>; the dollar amounts just scale with what you put in.</dd>
+      </dl>
+    </section>
+  </div>
+
+  <section class="panel" aria-labelledby="tableTitle">
+    <div class="chart-head">
+      <div>
+        <h2 id="tableTitle">Every day, in numbers</h2>
+        <p class="lede">The same information as the charts, written out.</p>
+      </div>
+    </div>
+    <div class="table-scroll">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th scope="col">Day</th>
+            <th scope="col">GDX price</th>
+            <th scope="col">Your shares are worth</th>
+            <th scope="col">Change that day</th>
+            <th scope="col">Total vs. what you paid</th>
+            <th scope="col"><span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Remove</span></th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p id="storageNote"></p>
+    <p>You put in $284 together, which converted to <strong class="mono">US$208.82</strong> and bought <strong class="mono">2.10380344</strong> shares at <strong class="mono">$99.26</strong> each on Sept 7, 2026. Every dollar figure on this page is in US dollars, because that is the currency GDX trades in.</p>
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- the trade, exactly as recorded in the spreadsheet ---------- */
+  var TRADE = {
+    shares:   2.10380344,
+    buyPrice: 99.26,
+    buyDate:  "2026-09-07",
+    homeTotal: 284,
+    kids: [
+      { id:"dhruv", name:"Dhruv", put: 38  },
+      { id:"mitra", name:"Mitra", put: 246 }
+    ]
+  };
+  var COST = TRADE.shares * TRADE.buyPrice;           /* 208.8235... USD */
+  TRADE.kids.forEach(function(k){
+    k.frac   = k.put / TRADE.homeTotal;
+    k.shares = TRADE.shares * k.frac;
+    k.cost   = COST * k.frac;
+  });
+
+  /* Pretend weekday prices, shown only until a real price exists. */
+  var PRETEND = [
+    { date:"2026-09-08", price:100.41 },
+    { date:"2026-09-09", price: 99.87 },
+    { date:"2026-09-10", price:101.62 },
+    { date:"2026-09-11", price:102.35 }
+  ];
+
+  var LS_KEY = "gdx-kids-prices-v1", LS_FLAG = "gdx-kids-pretend-off-v1";
+
+  var state = { prices: {}, pretendOff:false, barMode:"daily", db:null, ready:false };
+
+  /* ---------- formatting ---------- */
+  function money(n){
+    var s = Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return (n < 0 ? "−$" : "$") + s;
+  }
+  function signedMoney(n){
+    if (Math.abs(n) < 0.005) return "$0.00";
+    var s = Math.abs(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return (n < 0 ? "−$" : "+$") + s;
+  }
+  function signedPct(n){
+    if (Math.abs(n) < 0.005) return "0.00%";
+    return (n < 0 ? "−" : "+") + Math.abs(n).toFixed(2) + "%";
+  }
+  var MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function parseISO(iso){ var p = iso.split("-"); return new Date(+p[0], +p[1]-1, +p[2]); }
+  function shortDay(iso){ var d = parseISO(iso); return MONTHS[d.getMonth()] + " " + d.getDate(); }
+  function longDay(iso){
+    var d = parseISO(iso), wd = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"][d.getDay()];
+    return wd + ", " + MONTHS[d.getMonth()] + " " + d.getDate();
+  }
+  function esc(s){ return String(s).replace(/[&<>"]/g, function(c){
+    return ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;" })[c]; }); }
+
+  /* ---------- series ---------- */
+  function usingPretend(){
+    return !state.pretendOff && Object.keys(state.prices).length === 0;
+  }
+  function series(){
+    var rows = [{ date: TRADE.buyDate, price: TRADE.buyPrice, buy:true, pretend:false }];
+    var src;
+    if (usingPretend()) {
+      src = PRETEND.map(function(p){ return { date:p.date, price:p.price, pretend:true }; });
+    } else {
+      src = Object.keys(state.prices).sort().map(function(d){
+        return { date:d, price: state.prices[d], pretend:false };
+      });
+    }
+    src.forEach(function(r){ if (r.date !== TRADE.buyDate) rows.push(r); });
+    rows.sort(function(a,b){ return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+    var prev = null;
+    rows.forEach(function(r){
+      r.value  = TRADE.shares * r.price;
+      r.total  = r.value - COST;
+      r.change = prev === null ? 0 : r.value - prev;
+      prev = r.value;
+    });
+    return rows;
+  }
+
+  /* ---------- tick helper ---------- */
+  function niceTicks(min, max, want){
+    var span = (max - min) || 1;
+    var raw  = span / want;
+    var mag  = Math.pow(10, Math.floor(Math.log(raw) / Math.LN10));
+    var norm = raw / mag, step;
+    if (norm <= 1) step = 1; else if (norm <= 2) step = 2;
+    else if (norm <= 2.5) step = 2.5; else if (norm <= 5) step = 5; else step = 10;
+    step *= mag;
+    var out = [], t = Math.floor(min / step) * step;
+    for (; t <= max + step * 0.5; t += step) out.push(+t.toFixed(6));
+    return out;
+  }
+
+  /* ---------- chart 1: value over time ---------- */
+  function drawValue(rows){
+    var svg = document.getElementById("valueChart");
+    var W = 800, H = 320, P = { l:60, r:30, t:28, b:46 };
+    var vals = rows.map(function(r){ return r.value; }).concat([COST]);
+    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+    var pad = ((hi - lo) || 4) * 0.35;
+    lo -= pad; hi += pad;
+    var ticks = niceTicks(lo, hi, 4);
+    lo = Math.min(lo, ticks[0]); hi = Math.max(hi, ticks[ticks.length - 1]);
+
+    var n = rows.length;
+    var innerW = W - P.l - P.r, innerH = H - P.t - P.b;
+    var X = function(i){ return n < 2 ? P.l + innerW / 2 : P.l + i * innerW / (n - 1); };
+    var Y = function(v){ return P.t + (hi - v) / (hi - lo) * innerH; };
+    var y0 = Y(COST);
+
+    var s = [];
+    s.push('<defs>');
+    s.push('<clipPath id="clipAbove"><rect x="0" y="0" width="' + W + '" height="' + y0.toFixed(2) + '"></rect></clipPath>');
+    s.push('<clipPath id="clipBelow"><rect x="0" y="' + y0.toFixed(2) + '" width="' + W + '" height="' + (H - y0).toFixed(2) + '"></rect></clipPath>');
+    s.push('</defs>');
+
+    ticks.forEach(function(t){
+      var y = Y(t);
+      if (y < P.t - 1 || y > P.t + innerH + 1) return;
+      s.push('<line class="grid-line" x1="' + P.l + '" y1="' + y.toFixed(2) + '" x2="' + (W - P.r) + '" y2="' + y.toFixed(2) + '"></line>');
+      s.push('<text class="axis-text" x="' + (P.l - 10) + '" y="' + (y + 4).toFixed(2) + '" text-anchor="end">$' + t.toFixed(0) + '</text>');
+    });
+
+    if (n > 1) {
+      var poly = "M" + X(0).toFixed(2) + "," + y0.toFixed(2) + " ";
+      rows.forEach(function(r, i){ poly += "L" + X(i).toFixed(2) + "," + Y(r.value).toFixed(2) + " "; });
+      poly += "L" + X(n - 1).toFixed(2) + "," + y0.toFixed(2) + " Z";
+      s.push('<path class="area-up" d="' + poly + '" clip-path="url(#clipAbove)"></path>');
+      s.push('<path class="area-down" d="' + poly + '" clip-path="url(#clipBelow)"></path>');
+    }
+
+    s.push('<line class="base-line" x1="' + P.l + '" y1="' + y0.toFixed(2) + '" x2="' + (W - P.r) + '" y2="' + y0.toFixed(2) + '"></line>');
+    var labelY = y0 > P.t + 34 ? y0 - 9 : y0 + 18;
+    s.push('<text class="base-label" x="' + (P.l + 5) + '" y="' + labelY.toFixed(2) + '">What you paid &#183; $' + COST.toFixed(2) + '</text>');
+
+    if (usingPretend()) {
+      s.push('<text class="watermark" x="' + (P.l + innerW / 2) + '" y="' + (P.t + innerH / 2 + 12) + '" text-anchor="middle">PRETEND</text>');
+    }
+
+    if (n > 1) {
+      var line = rows.map(function(r, i){
+        return (i ? "L" : "M") + X(i).toFixed(2) + "," + Y(r.value).toFixed(2);
+      }).join(" ");
+      s.push('<path class="value-line" d="' + line + '"></path>');
+    }
+
+    rows.forEach(function(r, i){
+      var last = i === n - 1;
+      s.push('<circle class="' + (last ? "dot-end" : "dot-mark") + '" cx="' + X(i).toFixed(2) +
+             '" cy="' + Y(r.value).toFixed(2) + '" r="' + (last ? 7 : 5) + '"></circle>');
+      s.push('<text class="axis-text day" x="' + X(i).toFixed(2) + '" y="' + (P.t + innerH + 24) +
+             '" text-anchor="middle">' + esc(shortDay(r.date)) + '</text>');
+    });
+
+    var lastRow = rows[n - 1];
+    var lx = X(n - 1), ly = Y(lastRow.value);
+    var anchor = lx > W - P.r - 70 ? "end" : "middle";
+    var ldy = ly < P.t + 26 ? 26 : -16;
+    s.push('<text class="end-label" x="' + lx.toFixed(2) + '" y="' + (ly + ldy).toFixed(2) +
+           '" text-anchor="' + anchor + '">' + money(lastRow.value) + '</text>');
+
+    var band = n < 2 ? innerW : innerW / (n - 1);
+    rows.forEach(function(r, i){
+      s.push('<rect class="hit" data-i="' + i + '" x="' + (X(i) - band / 2).toFixed(2) + '" y="' + P.t +
+             '" width="' + band.toFixed(2) + '" height="' + innerH + '"></rect>');
+    });
+
+    svg.innerHTML = s.join("");
+    document.getElementById("chart1Desc").textContent =
+      "Line chart of the value of " + TRADE.shares + " GDX shares from " + longDay(rows[0].date) +
+      " to " + longDay(lastRow.date) + ", against a purchase cost of " + money(COST) + ".";
+
+    wireTips(svg, "tip1", rows, function(r){
+      return '<div class="t-d">' + esc(longDay(r.date)) + (r.pretend ? " (pretend)" : "") + '</div>' +
+             '<div class="t-v">Worth ' + money(r.value) + '</div>' +
+             '<div class="t-v">' + (r.buy ? "The day you bought" : signedMoney(r.total) + " vs. what you paid") + '</div>';
+    }, function(i){ return { x: X(i), y: Y(rows[i].value) }; }, W, H);
+  }
+
+  /* ---------- chart 2: daily bars ---------- */
+  function drawBars(rows){
+    var svg  = document.getElementById("barsChart");
+    var mode = state.barMode;
+    var data = (mode === "daily") ? rows.slice(1) : rows.slice(0);
+    var key  = (mode === "daily") ? "change" : "total";
+
+    var W = 800, H = 260, P = { l:60, r:30, t:30, b:46 };
+    var innerW = W - P.l - P.r, innerH = H - P.t - P.b;
+
+    if (!data.length) {
+      svg.innerHTML = '<text class="axis-text" x="' + (W / 2) + '" y="' + (H / 2) +
+                      '" text-anchor="middle">No days yet &mdash; add a price to see the bars.</text>';
+      document.getElementById("chart2Desc").textContent = "No daily data yet.";
+      return;
+    }
+
+    var nums = data.map(function(r){ return r[key]; });
+    var maxAbs = Math.max.apply(null, nums.map(Math.abs));
+    if (maxAbs < 0.5) maxAbs = 0.5;
+    maxAbs *= 1.45;
+    var ticks = niceTicks(-maxAbs, maxAbs, 4);
+    var lo = Math.min(-maxAbs, ticks[0]), hi = Math.max(maxAbs, ticks[ticks.length - 1]);
+    var Y = function(v){ return P.t + (hi - v) / (hi - lo) * innerH; };
+    var zero = Y(0);
+
+    var n = data.length;
+    var slot = innerW / n;
+    var bw = Math.max(14, Math.min(64, slot - Math.max(2, slot * 0.34)));
+    var X = function(i){ return P.l + slot * i + slot / 2; };
+
+    var s = [];
+    s.push('<defs><pattern id="hatchDown" width="6" height="6" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">' +
+           '<rect width="6" height="6" fill="none"></rect>' +
+           '<line x1="0" y1="0" x2="0" y2="6" stroke="var(--surface)" stroke-width="2" opacity="0.55"></line></pattern></defs>');
+
+    ticks.forEach(function(t){
+      var y = Y(t);
+      if (y < P.t - 1 || y > P.t + innerH + 1) return;
+      if (Math.abs(t) < 1e-9) return;
+      s.push('<line class="grid-line" x1="' + P.l + '" y1="' + y.toFixed(2) + '" x2="' + (W - P.r) + '" y2="' + y.toFixed(2) + '"></line>');
+      s.push('<text class="axis-text" x="' + (P.l - 10) + '" y="' + (y + 4).toFixed(2) + '" text-anchor="end">' +
+             (t > 0 ? "+" : t < 0 ? "−" : "") + "$" + Math.abs(t).toFixed(Math.abs(t) < 10 ? 1 : 0) + '</text>');
+    });
+
+    if (usingPretend()) {
+      s.push('<text class="watermark" x="' + (P.l + innerW / 2) + '" y="' + (P.t + innerH / 2 + 12) + '" text-anchor="middle">PRETEND</text>');
+    }
+
+    data.forEach(function(r, i){
+      var v = r[key], up = v >= 0, r4 = 4;
+      var yv = Y(v), top = Math.min(yv, zero), bot = Math.max(yv, zero);
+      var h = Math.max(bot - top, 2.5);
+      var x = X(i) - bw / 2;
+      var d;
+      if (up) {
+        var ry = Math.min(r4, h);
+        d = "M" + x + "," + bot + " L" + x + "," + (top + ry) + " Q" + x + "," + top + " " + (x + ry) + "," + top +
+            " L" + (x + bw - ry) + "," + top + " Q" + (x + bw) + "," + top + " " + (x + bw) + "," + (top + ry) +
+            " L" + (x + bw) + "," + bot + " Z";
+      } else {
+        var ry2 = Math.min(r4, h);
+        d = "M" + x + "," + top + " L" + x + "," + (bot - ry2) + " Q" + x + "," + bot + " " + (x + ry2) + "," + bot +
+            " L" + (x + bw - ry2) + "," + bot + " Q" + (x + bw) + "," + bot + " " + (x + bw) + "," + (bot - ry2) +
+            " L" + (x + bw) + "," + top + " Z";
+      }
+      s.push('<path class="' + (up ? "bar-up" : "bar-down") + '" d="' + d + '"></path>');
+      if (!up) s.push('<path d="' + d + '" fill="url(#hatchDown)"></path>');
+
+      var ly = up ? top - 9 : bot + 17;
+      s.push('<text class="bar-label" x="' + X(i).toFixed(2) + '" y="' + ly.toFixed(2) + '" text-anchor="middle">' +
+             (up ? "▲ " : "▼ ") + signedMoney(v) + '</text>');
+      s.push('<text class="axis-text day" x="' + X(i).toFixed(2) + '" y="' + (P.t + innerH + 26) +
+             '" text-anchor="middle">' + esc(shortDay(r.date)) + '</text>');
+    });
+
+    s.push('<line class="zero-line" x1="' + P.l + '" y1="' + zero.toFixed(2) + '" x2="' + (W - P.r) + '" y2="' + zero.toFixed(2) + '"></line>');
+
+    data.forEach(function(r, i){
+      s.push('<rect class="hit" data-i="' + i + '" x="' + (X(i) - slot / 2).toFixed(2) + '" y="' + P.t +
+             '" width="' + slot.toFixed(2) + '" height="' + innerH + '"></rect>');
+    });
+
+    svg.innerHTML = s.join("");
+
+    var ups = data.filter(function(r){ return r[key] > 0; }).length;
+    var downs = data.filter(function(r){ return r[key] < 0; }).length;
+    document.getElementById("tallyLegend").textContent = ups + " up, " + downs + " down";
+    document.getElementById("chart2Lede").textContent = mode === "daily"
+      ? "Each bar is one day compared with the day before. Up bars are days you made money."
+      : "Each bar is that day compared with the $208.82 you paid. Up bars mean you were ahead that day.";
+    document.getElementById("chart2Desc").textContent =
+      "Bar chart with " + n + " bars, " + ups + " up and " + downs + " down.";
+
+    wireTips(svg, "tip2", data, function(r){
+      return '<div class="t-d">' + esc(longDay(r.date)) + (r.pretend ? " (pretend)" : "") + '</div>' +
+             '<div class="t-v">' + (mode === "daily" ? "That day: " : "Total: ") + signedMoney(r[key]) + '</div>' +
+             '<div class="t-v">GDX at $' + r.price.toFixed(2) + '</div>';
+    }, function(i){ return { x: X(i), y: Math.min(Y(data[i][key]), zero) }; }, W, H);
+  }
+
+  /* ---------- shared tooltip wiring ---------- */
+  function wireTips(svg, tipId, rows, html, pos, W, H){
+    var tip = document.getElementById(tipId);
+    var hits = svg.querySelectorAll(".hit");
+    function show(i){
+      var r = rows[i]; if (!r) return;
+      tip.innerHTML = html(r);
+      var box = svg.getBoundingClientRect();
+      var p = pos(i);
+      tip.style.left = (p.x / W * box.width) + "px";
+      tip.style.top  = (p.y / H * box.height) + "px";
+      tip.setAttribute("data-show", "1");
+    }
+    function hide(){ tip.removeAttribute("data-show"); }
+    Array.prototype.forEach.call(hits, function(h){
+      var i = +h.getAttribute("data-i");
+      h.addEventListener("mouseenter", function(){ show(i); });
+      h.addEventListener("focus", function(){ show(i); });
+      h.addEventListener("touchstart", function(){ show(i); }, { passive:true });
+    });
+    svg.addEventListener("mouseleave", hide);
+    svg.addEventListener("blur", hide, true);
+  }
+
+  /* ---------- headline + cards + table ---------- */
+  function mood(pct){
+    if (pct >=  5) return ["\u{1F929}", "Wow — your money really grew!"];
+    if (pct >=  1) return ["\u{1F604}", "Nice! Your money grew."];
+    if (pct >   0.05) return ["\u{1F642}", "A little bit up."];
+    if (pct >= -0.05) return ["\u{1F610}", "Almost exactly where you started."];
+    if (pct > -1)  return ["\u{1F615}", "A little bit down."];
+    if (pct > -5)  return ["\u{1F641}", "Down a bit today."];
+    return ["\u{1F62E}", "Ouch — a big dip."];
+  }
+  function pillHTML(v, pct){
+    var cls = Math.abs(v) < 0.005 ? "flat" : v > 0 ? "up" : "down";
+    var glyph = cls === "up" ? "▲" : cls === "down" ? "▼" : "▬";
+    var word = cls === "up" ? "up" : cls === "down" ? "down" : "flat";
+    return '<span class="pill ' + cls + '"><span class="glyph">' + glyph + '</span>' +
+           signedMoney(v) + ' &nbsp;' + word + ' ' + signedPct(pct).replace(/^[+−]/, "") + '</span>';
+  }
+
+  function renderSummary(rows){
+    var last = rows[rows.length - 1];
+    var totalPct = COST ? (last.total / COST) * 100 : 0;
+    var m = mood(totalPct);
+
+    document.getElementById("moodFace").textContent = m[0];
+    document.getElementById("moodLine").textContent = m[1];
+    document.getElementById("moodSub").textContent =
+      rows.length > 1
+        ? "Since " + longDay(TRADE.buyDate) + ", your " + TRADE.shares.toFixed(4) +
+          " shares went from " + money(COST) + " to " + money(last.value) + "."
+        : "You bought on " + longDay(TRADE.buyDate) + ". Add a price to see how it is doing.";
+
+    document.getElementById("scoreValue").textContent = money(last.value);
+    document.getElementById("scoreValueNote").textContent =
+      "GDX at $" + last.price.toFixed(2) + " on " + shortDay(last.date);
+    document.getElementById("scoreGainPill").innerHTML = pillHTML(last.total, totalPct);
+    document.getElementById("scoreGainNote").textContent =
+      "You paid " + money(COST) + " on " + shortDay(TRADE.buyDate);
+
+    TRADE.kids.forEach(function(k){
+      var value = k.shares * last.price, gain = value - k.cost;
+      var pct = k.cost ? (gain / k.cost) * 100 : 0;
+      document.getElementById(k.id + "Value").textContent = money(value);
+      document.getElementById(k.id + "Meta").textContent =
+        "Started at " + money(k.cost) + " · " + k.shares.toFixed(4) + " shares";
+      document.getElementById(k.id + "Pill").innerHTML = pillHTML(gain, pct);
+    });
+  }
+
+  function renderTable(rows){
+    var body = document.getElementById("tableBody");
+    var out = rows.slice().reverse().map(function(r){
+      var chg = r.buy
+        ? '<span style="color:var(--ink-3)">the day you bought</span>'
+        : '<span class="updown ' + (r.change >= 0 ? "up" : "down") + '">' +
+          (r.change >= 0 ? "▲ " : "▼ ") + signedMoney(r.change) + '</span>';
+      var tot = '<span class="updown ' + (r.total >= 0 ? "up" : "down") + '">' +
+                (Math.abs(r.total) < 0.005 ? "—" : (r.total >= 0 ? "▲ " : "▼ ") + signedMoney(r.total)) + '</span>';
+      var del = (!r.buy && !r.pretend)
+        ? '<button class="del" type="button" data-del="' + esc(r.date) + '" aria-label="Remove ' + esc(shortDay(r.date)) + '">&times;</button>'
+        : "";
+      return '<tr class="' + (r.buy ? "is-buy" : "") + '">' +
+        '<td>' + esc(shortDay(r.date)) + (r.buy ? ' <span class="tag" style="border-color:var(--gold);color:var(--gold-ink);background:var(--gold-wash)">bought</span>' : "") +
+          (r.pretend ? ' <span class="tag">pretend</span>' : "") + '</td>' +
+        '<td class="num">$' + r.price.toFixed(2) + '</td>' +
+        '<td class="num">' + money(r.value) + '</td>' +
+        '<td class="num">' + chg + '</td>' +
+        '<td class="num">' + tot + '</td>' +
+        '<td>' + del + '</td></tr>';
+    }).join("");
+    body.innerHTML = out;
+    Array.prototype.forEach.call(body.querySelectorAll("[data-del]"), function(b){
+      b.addEventListener("click", function(){ removePrice(b.getAttribute("data-del")); });
+    });
+  }
+
+  function render(){
+    var rows = series();
+    document.getElementById("pretendBanner").hidden = !usingPretend();
+    renderSummary(rows);
+    drawValue(rows);
+    drawBars(rows);
+    renderTable(rows);
+  }
+
+  /* ---------- persistence ---------- */
+  function localLoad(){
+    try {
+      var raw = localStorage.getItem(LS_KEY);
+      if (raw) state.prices = JSON.parse(raw) || {};
+      state.pretendOff = localStorage.getItem(LS_FLAG) === "1";
+    } catch (e) { /* private mode, blocked storage — carry on */ }
+  }
+  function localSave(){
+    try {
+      localStorage.setItem(LS_KEY, JSON.stringify(state.prices));
+      localStorage.setItem(LS_FLAG, state.pretendOff ? "1" : "0");
+    } catch (e) { /* nothing we can do; the page still works this session */ }
+  }
+
+  function setStatus(msg, kind){
+    var el = document.getElementById("addStatus");
+    el.textContent = msg || "";
+    if (kind) el.setAttribute("data-kind", kind); else el.removeAttribute("data-kind");
+  }
+
+  function savePrice(date, price){
+    state.prices[date] = price;
+    state.pretendOff = true;
+    render();
+    if (state.db) {
+      state.db.collection("prices").doc(date).set({ date:date, price:price, addedAt:new Date().toISOString() })
+        .then(function(){ setStatus("Saved " + shortDay(date) + " at $" + price.toFixed(2) + ". Everyone sees it."); })
+        .catch(function(err){
+          setStatus("Could not save that to the shared list (" + (err && err.code ? err.code : "error") + "). It is showing here for now.", "bad");
+        });
+      state.db.doc("settings/app").set({ pretendOff:true }).catch(function(){});
+    } else {
+      localSave();
+      setStatus("Saved " + shortDay(date) + " at $" + price.toFixed(2) + " on this device.");
+    }
+  }
+
+  function removePrice(date){
+    delete state.prices[date];
+    render();
+    if (state.db) {
+      state.db.collection("prices").doc(date).delete().catch(function(){});
+    } else {
+      localSave();
+    }
+    setStatus("Removed " + shortDay(date) + ".");
+  }
+
+  /* ---------- inputs ---------- */
+  function lastWeekdayISO(){
+    var d = new Date();
+    while (d.getDay() === 0 || d.getDay() === 6) d.setDate(d.getDate() - 1);
+    var mm = String(d.getMonth() + 1).padStart(2, "0"), dd = String(d.getDate()).padStart(2, "0");
+    return d.getFullYear() + "-" + mm + "-" + dd;
+  }
+
+  document.getElementById("addForm").addEventListener("submit", function(ev){
+    ev.preventDefault();
+    var date  = document.getElementById("inDate").value;
+    var price = parseFloat(document.getElementById("inPrice").value);
+    if (!date) { setStatus("Pick a day first.", "bad"); return; }
+    if (!(price > 0) || price > 10000) { setStatus("Type a GDX price between $0.01 and $10,000.", "bad"); return; }
+    if (date < TRADE.buyDate) { setStatus("That day is before you bought the shares on " + shortDay(TRADE.buyDate) + ".", "bad"); return; }
+    if (date === TRADE.buyDate) { setStatus("Sept 7 is locked at $99.26 — that is the price you actually paid.", "bad"); return; }
+    savePrice(date, price);
+    document.getElementById("inPrice").value = "";
+  });
+
+  document.getElementById("dismissPretend").addEventListener("click", function(){
+    state.pretendOff = true;
+    render();
+    if (state.db) state.db.doc("settings/app").set({ pretendOff:true }).catch(function(){});
+    else localSave();
+  });
+
+  document.getElementById("modeDaily").addEventListener("click", function(){ setMode("daily"); });
+  document.getElementById("modeTotal").addEventListener("click", function(){ setMode("total"); });
+  function setMode(m){
+    state.barMode = m;
+    document.getElementById("modeDaily").setAttribute("aria-pressed", String(m === "daily"));
+    document.getElementById("modeTotal").setAttribute("aria-pressed", String(m === "total"));
+    drawBars(series());
+  }
+
+  var resizeTimer;
+  window.addEventListener("resize", function(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){ var r = series(); drawValue(r); drawBars(r); }, 140);
+  });
+
+  /* ---------- boot ---------- */
+  document.getElementById("inDate").value = lastWeekdayISO();
+  document.getElementById("inDate").min = TRADE.buyDate;
+  localLoad();
+  document.getElementById("storageNote").textContent =
+    "Prices you add are saved on this device for now.";
+  render();
+
+  if (window.claude && typeof window.claude.use === "function") {
+    window.claude.use("db").then(function(db){
+      if (!db) return;
+      state.db = db;
+      document.getElementById("storageNote").textContent =
+        "Prices you add are saved for everyone who opens this page.";
+      db.doc("settings/app").onSnapshot(function(snap){
+        if (snap.exists && snap.data() && snap.data().pretendOff) { state.pretendOff = true; render(); }
+      }, function(){});
+      db.collection("prices").onSnapshot(function(snap){
+        var next = {};
+        snap.docs.forEach(function(d){
+          var v = d.data();
+          if (v && typeof v.price === "number" && isFinite(v.price) && v.price > 0) next[d.id] = v.price;
+        });
+        state.prices = next;
+        render();
+      }, function(err){
+        setStatus("The shared list is unavailable right now (" + (err && err.code ? err.code : "error") + "). Prices you add stay on this device.", "bad");
+        state.db = null;
+        document.getElementById("storageNote").textContent =
+          "Prices you add are saved on this device for now.";
+      });
+    }).catch(function(){});
+  }
+})();
+</script>
